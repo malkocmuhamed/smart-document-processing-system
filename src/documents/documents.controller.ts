@@ -29,7 +29,7 @@ export class DocumentsController {
     if (!file) {
       throw new BadRequestException('File is required');
     }
-    const document = await this.documentsService.createDocument(file);
+    const document = await this.documentsService.processDocument(file);
 
     return {
       message: 'File uploaded and saved to database',

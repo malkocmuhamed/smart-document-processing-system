@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { ExtractionService } from '../extraction/extraction.service';
 
 @Injectable()
 export class DocumentsService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private prisma: PrismaService, private extractionService: ExtractionService) { }
 
-    async createDocument(file: Express.Multer.File) {
+    async processDocument(file: Express.Multer.File) {
+        const extracted = await this.extractionService.extract(file);
+
         return this.prisma.document.create({
             data: {
                 fileName: file.filename,
@@ -13,6 +16,7 @@ export class DocumentsService {
                 fileType: file.mimetype,
                 filePath: `/uploads/${file.filename}`,
                 status: 'UPLOADED',
+                extractedData: extracted as any,
             },
         });
     }
