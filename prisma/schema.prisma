@@ -16,6 +16,7 @@ model Document {
 
   status        DocumentStatus @default(UPLOADED)
   extractedData   Json?
+  validationResult Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

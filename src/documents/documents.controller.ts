@@ -29,11 +29,17 @@ export class DocumentsController {
     if (!file) {
       throw new BadRequestException('File is required');
     }
-    const document = await this.documentsService.processDocument(file);
+    const result = await this.documentsService.processDocument(file);
 
     return {
       message: 'File uploaded and saved to database',
-      document,
+      data: {
+        id: result.id,
+        fileName: result.fileName,
+        status: result.status,
+        extractedData: result.extractedData,
+        validation: result.validationResult,
+      }
     };
   }
 }
