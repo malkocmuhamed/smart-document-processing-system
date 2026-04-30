@@ -1,9 +1,13 @@
 import {
   BadRequestException,
+  Body,
   Controller,
+  Param,
   Post,
+  Patch,
   UploadedFile,
   UseInterceptors,
+  Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -41,5 +45,28 @@ export class DocumentsController {
         validation: result.validationResult,
       }
     };
+  }
+
+  @Patch(':id')
+  async updateDocument(
+    @Param('id') id: string,
+    @Body() updatedData: any,
+  ) {
+    return this.documentsService.updateDocument(id, updatedData);
+  }
+
+  @Get()
+  async getAll() {
+    return this.documentsService.getAll();
+  }
+
+  @Get('dashboard')
+  async dashboard() {
+    return this.documentsService.dashboard();
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.documentsService.getOne(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { ExtractionService } from '../extraction/extraction.service';
 import { ValidationService } from 'src/validation/validation.service';
@@ -24,9 +24,60 @@ export class DocumentsService {
                 fileType: file.mimetype,
                 filePath: `/uploads/${file.filename}`,
                 status,
-                extractedData: extracted as any,
-                validationResult: validation as any,
+                extractedData: extracted as Record<string, any>,
+                validationResult: validation as Record<string, any>,
             },
         });
+    }
+
+    async updateDocument(id: string, extractedData: any) {
+        const validation = await this.validationService.validate(extractedData);
+        const status = this.validationService.determineStatus(validation);
+
+        return this.prisma.document.update({
+            where: { id },
+            data: {
+                extractedData: extractedData as Record<string, any>,
+                validationResult: validation as Record<string, any>,
+                status,
+            },
+        });
+    }
+
+    async getAll() {
+        return this.prisma.document.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    async getOne(id: string) {
+        const document = await this.prisma.document.findUnique({
+            where: { id },
+        });
+
+        if (!document) {
+            throw new NotFoundException('Document not found');
+        }
+
+        return document;
+    }
+
+    async dashboard() {
+        const docs = await this.prisma.document.findMany();
+        const totalsByCurrency = {};
+
+        for (const doc of docs) {
+            const data: any = doc.extractedData;
+
+            if (data?.currency && data?.total) {
+                totalsByCurrency[data.currency] =
+                    (totalsByCurrency[data.currency] || 0) + data.total;
+            }
+        }
+
+        return {
+            documents: docs,
+            totalsByCurrency,
+        };
     }
 }
