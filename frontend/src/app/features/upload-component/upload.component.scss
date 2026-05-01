@@ -1,0 +1,28 @@
+.upload-card {
+  max-width: 500px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.result-card {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.valid {
+  color: green;
+  font-weight: bold;
+}
+
+.invalid {
+  color: red;
+  font-weight: bold;
+}

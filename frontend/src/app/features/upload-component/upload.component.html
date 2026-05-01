@@ -1,0 +1,32 @@
+<mat-card class="upload-card">
+  <h2>Upload Document</h2>
+
+  <button mat-stroked-button color="primary" (click)="fileInput.click()">
+    Choose File
+  </button>
+
+  <input
+    type="file"
+    hidden
+    #fileInput
+    (change)="onFileSelected($event)"
+  />
+
+  <p *ngIf="selectedFile">
+    Selected: {{ selectedFile.name }}
+  </p>
+
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="upload()"
+    [disabled]="loading || !selectedFile"
+  >
+    Upload
+  </button>
+
+  <mat-progress-bar
+    *ngIf="loading"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</mat-card>
