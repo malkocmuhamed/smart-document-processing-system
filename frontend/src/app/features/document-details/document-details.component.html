@@ -1,0 +1,137 @@
+<mat-card *ngIf="document() as doc">
+
+    <h2>{{ doc.fileName }}</h2>
+    <p>Status: <strong>{{ doc.status }}</strong></p>
+
+    <form [formGroup]="form" class="form">
+
+        <h3>Document Info</h3>
+        <div class="grid">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Type</mat-label>
+                <input matInput formControlName="documentType">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Supplier</mat-label>
+                <input matInput formControlName="supplier">
+                <mat-error *ngIf="hasError('supplier')">
+                    {{ getError('supplier') }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Document #</mat-label>
+                <input matInput formControlName="documentNumber">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Currency</mat-label>
+                <input matInput formControlName="currency">
+            </mat-form-field>
+
+        </div>
+
+        <h3>Dates</h3>
+        <div class="grid">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Issue Date</mat-label>
+                <input matInput [matDatepicker]="issuePicker" formControlName="issueDate">
+                <mat-datepicker-toggle matIconSuffix [for]="issuePicker"></mat-datepicker-toggle>
+                <mat-datepicker #issuePicker></mat-datepicker>
+                <mat-error *ngIf="hasError('issueDate')">
+                    {{ getError('issueDate') }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Due Date</mat-label>
+                <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+                <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
+                <mat-datepicker #duePicker></mat-datepicker>
+                <mat-error *ngIf="hasError('dueDate')">
+                    {{ getError('dueDate') }}
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <h3>Financials</h3>
+        <div class="grid">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Subtotal</mat-label>
+                <input matInput type="number" formControlName="subtotal">
+                <mat-error *ngIf="hasError('subtotal')">
+                    {{ getError('subtotal') }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Tax</mat-label>
+                <input matInput type="number" formControlName="tax">
+                <mat-error *ngIf="hasError('tax')">
+                    {{ getError('tax') }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Total</mat-label>
+                <input matInput type="number" formControlName="total">
+                <mat-error *ngIf="hasError('total')">
+                    {{ getError('total') }}
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <h3>Line Items</h3>
+
+        <table *ngIf="extracted().lineItems?.length; else noItems" class="items-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of extracted().lineItems">
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ng-template #noItems>
+            <p>No line items found</p>
+        </ng-template>
+
+        <h3>Validation Issues</h3>
+
+        <div *ngIf="validation()?.isValid; else errors">
+            <p class="valid">Document is valid</p>
+        </div>
+
+        <ng-template #errors>
+            <ul>
+                <li *ngFor="let err of validation()?.errors">
+                    <strong>{{ err.field }}</strong>: {{ err.message }}
+                </li>
+            </ul>
+        </ng-template>
+
+        <div class="actions">
+            <button mat-raised-button color="primary" (click)="save()" [disabled]="saving() || !form.dirty">
+                Save
+            </button>
+        </div>
+
+    </form>
+
+</mat-card>

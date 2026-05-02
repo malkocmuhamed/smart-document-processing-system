@@ -1,0 +1,52 @@
+mat-card {
+    margin: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.items-table th,
+.items-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.valid {
+    color: green;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 4px;
+}
+
+.error {
+    border: 1px solid red;
+}
+
+.error-text {
+    color: red;
+    font-size: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.actions {
+  margin-top: 20px;
+}

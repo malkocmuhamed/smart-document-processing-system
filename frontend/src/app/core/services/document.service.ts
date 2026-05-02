@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Document } from '../../shared/models/document.model';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
@@ -21,8 +22,8 @@ export class DocumentService {
         return this.api.get<Document>(`/documents/${id}`);
     }
 
-    update(id: string, data: any) {
-        return this.api.patch(`/documents/${id}`, data);
+    update(id: string, data: any): Observable<Document> {
+        return this.api.patch<Document>(`/documents/${id}`, data);
     }
 
     dashboard() {
