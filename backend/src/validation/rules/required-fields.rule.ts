@@ -1,10 +1,11 @@
-import { ExtractedDocument } from 'src/models/extracted-document.model';
 import { ValidationRule } from './validation-rule.interface';
 import { ValidationError } from '../types/validation-error.type';
+import { ValidationContext } from '../types/validation-context.type';
 
 export class RequiredFieldsRule implements ValidationRule {
-    async validate(document: ExtractedDocument): Promise<ValidationError[]> {
+    async validate(ctx: ValidationContext): Promise<ValidationError[]> {
         const errors: ValidationError[] = [];
+        const document = ctx.document;
 
         if (!document.documentNumber) {
             errors.push({

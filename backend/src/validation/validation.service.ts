@@ -9,6 +9,7 @@ import { ValidationResult } from './types/validation-result.type';
 import { ValidationError } from './types/validation-error.type';
 import { ExtractedDocument } from 'src/models/extracted-document.model';
 import { DocumentStatus } from '@prisma/client';
+import { ValidationContext } from './types/validation-context.type';
 
 @Injectable()
 export class ValidationService {
@@ -24,11 +25,24 @@ export class ValidationService {
         ];
     }
 
-    async validate(document: ExtractedDocument): Promise<ValidationResult> {
+    async validate(ctx: ValidationContext): Promise<ValidationResult> {
+
         const allErrors: ValidationError[] = [];
+        const document = ctx.document;
+        const documentId = ctx.documentId;
+
+        if (!document) {
+            return {
+                isValid: false,
+                errors: [{
+                    field: 'document',
+                    message: 'Document is missing'
+                }],
+            };
+        }
 
         for (const rule of this.rules) {
-            const errors = await rule.validate(document);
+            const errors = await rule.validate({documentId, document});
             allErrors.push(...errors);
         }
 

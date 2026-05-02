@@ -1,10 +1,16 @@
-import { ExtractedDocument } from 'src/models/extracted-document.model';
 import { ValidationRule } from './validation-rule.interface';
 import { ValidationError } from '../types/validation-error.type';
+import { ValidationContext } from '../types/validation-context.type';
 
 export class DatesRule implements ValidationRule {
-    async validate(document: ExtractedDocument): Promise<ValidationError[]> {
+    async validate(ctx: ValidationContext): Promise<ValidationError[]> {
+
         const errors: ValidationError[] = [];
+        const document = ctx.document;
+
+        if (!document) {
+            return errors;
+        }
 
         if (document.issueDate && isNaN(Date.parse(document.issueDate))) {
             errors.push({

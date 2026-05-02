@@ -1,23 +1,28 @@
-import { ExtractedDocument } from 'src/models/extracted-document.model';
 import { ValidationRule } from './validation-rule.interface';
 import { ValidationError } from '../types/validation-error.type';
-
+import { ValidationContext } from '../types/validation-context.type';
 
 export class TotalsRule implements ValidationRule {
-    async validate(document: ExtractedDocument): Promise<ValidationError[]> {
+
+    async validate(ctx: ValidationContext): Promise<ValidationError[]> {
+
         const errors: ValidationError[] = [];
+        const document = ctx.document;
 
-        if (
-            document.subtotal != null &&
-            document.tax != null &&
-            document.total != null
-        ) {
-            const expected = document.subtotal + document.tax;
+        const subtotal = Number(document.subtotal);
+        const tax = Number(document.tax);
+        const total = Number(document.total);
 
-            if (expected !== document.total) {
+        if (!isNaN(subtotal) && !isNaN(tax) && !isNaN(total)) {
+
+            const expected = subtotal + tax;
+
+            const isValid = Math.abs(expected - total) < 0.01;
+
+            if (!isValid) {
                 errors.push({
                     field: 'total',
-                    message: `Total mismatch (expected ${expected}, got ${document.total})`,
+                    message: `Total mismatch (expected ${expected}, got ${total})`,
                 });
             }
         }

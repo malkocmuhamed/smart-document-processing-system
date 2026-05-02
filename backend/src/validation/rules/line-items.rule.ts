@@ -1,11 +1,12 @@
-import { ExtractedDocument } from 'src/models/extracted-document.model';
 import { ValidationError } from '../types/validation-error.type';
 import { ValidationRule } from './validation-rule.interface';
+import { ValidationContext } from '../types/validation-context.type';
 
 
 export class LineItemsRule implements ValidationRule {
-    async validate(document: ExtractedDocument): Promise<ValidationError[]> {
+    async validate(ctx: ValidationContext): Promise<ValidationError[]> {
         const errors: ValidationError[] = [];
+        const document = ctx.document;
 
         if (!document.lineItems || document.lineItems.length === 0) {
             return errors;

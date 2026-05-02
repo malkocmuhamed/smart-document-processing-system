@@ -3,6 +3,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import { ExtractionService } from '../extraction/extraction.service';
 import { ValidationService } from 'src/validation/validation.service';
 import { DocumentStatus } from '@prisma/client';
+import { ExtractedDocument } from 'src/models/extracted-document.model';
 
 @Injectable()
 export class DocumentsService {
@@ -14,7 +15,9 @@ export class DocumentsService {
 
     async processDocument(file: Express.Multer.File) {
         const extracted = await this.extractionService.extract(file);
-        const validation = await this.validationService.validate(extracted);
+        const validation = await this.validationService.validate({
+            document: extracted,
+        });
         const status = this.validationService.determineStatus(validation);
 
         return this.prisma.document.create({
@@ -31,7 +34,14 @@ export class DocumentsService {
     }
 
     async updateDocument(id: string, extractedData: any) {
-        const validation = await this.validationService.validate(extractedData);
+        const document: ExtractedDocument = {
+            ...extractedData,
+        };
+
+        const validation = await this.validationService.validate({
+            documentId: id,
+            document,
+        });
         const status = this.validationService.determineStatus(validation);
 
         return this.prisma.document.update({
