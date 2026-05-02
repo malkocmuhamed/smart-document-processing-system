@@ -1,27 +1,18 @@
 <mat-card class="dashboard-card">
+
     <div class="header">
         <h2>Documents</h2>
-
-        <button mat-raised-button color="primary" routerLink="/upload">
-            Upload
-        </button>
     </div>
 
-    <table mat-table [dataSource]="documents()" matSort class="mat-elevation-z8">
+    <table mat-table [dataSource]="documents()" class="table">
 
         <ng-container matColumnDef="fileName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                File
-            </th>
-            <td mat-cell *matCellDef="let doc">
-                {{ doc.fileName }}
-            </td>
+            <th mat-header-cell *matHeaderCellDef>File</th>
+            <td mat-cell *matCellDef="let doc">{{ doc.fileName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Status
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let doc">
                 <span class="status" [ngClass]="doc.status">
                     {{ doc.status }}
@@ -29,35 +20,34 @@
             </td>
         </ng-container>
 
+        <!-- Date -->
         <ng-container matColumnDef="createdAt">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Created
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Created</th>
             <td mat-cell *matCellDef="let doc">
                 {{ doc.createdAt | date:'short' }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="errors">
-            <th mat-header-cell *matHeaderCellDef>
-                Issues
-            </th>
+            <th mat-header-cell *matHeaderCellDef>Issues</th>
             <td mat-cell *matCellDef="let doc">
                 {{ errorCount(doc) }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+
             <td mat-cell *matCellDef="let doc">
-                <button mat-button color="accent" (click)="viewDocument(doc.id)">
+                <button mat-button color="primary" (click)="viewDocument(doc.id)">
                     View
                 </button>
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     </table>
+
 </mat-card>

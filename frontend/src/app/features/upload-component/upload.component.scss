@@ -1,28 +1,16 @@
-.upload-card {
-  max-width: 500px;
-  margin: 20px auto;
+.upload-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
-.result-card {
-  max-width: 800px;
-  margin: 20px auto;
+.file-name {
+  font-size: 14px;
+  color: #555;
 }
 
-.loader {
+.actions {
   display: flex;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-.valid {
-  color: green;
-  font-weight: bold;
-}
-
-.invalid {
-  color: red;
-  font-weight: bold;
+  justify-content: flex-end;
+  gap: 10px;
 }

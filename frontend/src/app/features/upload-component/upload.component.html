@@ -1,19 +1,30 @@
-<mat-card class="upload-card">
-  <h2>Upload Document</h2>
+<h2 mat-dialog-title>Upload Document</h2>
 
-  <button mat-stroked-button color="primary" (click)="fileInput.click()">
+<mat-dialog-content class="upload-container">
+
+  <button mat-stroked-button (click)="fileInput.click()">
     Choose File
   </button>
 
-  <input type="file" hidden #fileInput (change)="onFileSelected($event)" />
+  <input hidden #fileInput type="file" (change)="onFileSelected($event)" />
 
-  <p *ngIf="selectedFile() as file">
-    Selected: {{ file.name }}
-  </p>
-
-  <button mat-raised-button color="accent" (click)="upload()" [disabled]="loading() || !selectedFile()">
-    Upload
-  </button>
+  <div *ngIf="selectedFile()" class="file-name">
+    {{ selectedFile()?.name }}
+  </div>
 
   <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
-</mat-card>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="actions">
+  <button mat-button mat-dialog-close>Cancel</button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="upload()"
+    [disabled]="!selectedFile() || loading()"
+  >
+    Upload
+  </button>
+</mat-dialog-actions>

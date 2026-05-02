@@ -1,134 +1,148 @@
-<mat-card *ngIf="document() as doc">
+<mat-card class="document-card" *ngIf="document() as doc">
 
-    <h2>{{ doc.fileName }}</h2>
-    <p>Status: <strong>{{ doc.status }}</strong></p>
+    <!-- HEADER -->
+    <div class="header">
+        <div>
+            <h2 class="title">{{ doc.fileName }}</h2>
+            <p class="subtitle">
+                Status:
+                <span class="status" [ngClass]="doc.status">
+                    {{ doc.status }}
+                </span>
+            </p>
+        </div>
+    </div>
 
     <form [formGroup]="form" class="form">
 
-        <h3>Document Info</h3>
-        <div class="grid">
+        <!-- DOCUMENT INFO -->
+        <section class="section">
+            <h3>Document Info</h3>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Type</mat-label>
-                <input matInput formControlName="documentType">
-            </mat-form-field>
+            <div class="grid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Type</mat-label>
+                    <input matInput formControlName="documentType">
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Supplier</mat-label>
-                <input matInput formControlName="supplier">
-                <mat-error *ngIf="hasError('supplier')">
-                    {{ getError('supplier') }}
-                </mat-error>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Supplier</mat-label>
+                    <input matInput formControlName="supplier">
+                    <mat-error *ngIf="hasError('supplier')">
+                        {{ getError('supplier') }}
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Document #</mat-label>
-                <input matInput formControlName="documentNumber">
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Document #</mat-label>
+                    <input matInput formControlName="documentNumber">
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Currency</mat-label>
-                <input matInput formControlName="currency">
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Currency</mat-label>
+                    <input matInput formControlName="currency">
+                </mat-form-field>
+            </div>
+        </section>
 
-        </div>
+        <!-- DATES -->
+        <section class="section">
+            <h3>Dates</h3>
 
-        <h3>Dates</h3>
-        <div class="grid">
+            <div class="grid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Issue Date</mat-label>
+                    <input matInput [matDatepicker]="issuePicker" formControlName="issueDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="issuePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #issuePicker></mat-datepicker>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Issue Date</mat-label>
-                <input matInput [matDatepicker]="issuePicker" formControlName="issueDate">
-                <mat-datepicker-toggle matIconSuffix [for]="issuePicker"></mat-datepicker-toggle>
-                <mat-datepicker #issuePicker></mat-datepicker>
-                <mat-error *ngIf="hasError('issueDate')">
-                    {{ getError('issueDate') }}
-                </mat-error>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Due Date</mat-label>
+                    <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #duePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </section>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Due Date</mat-label>
-                <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
-                <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
-                <mat-datepicker #duePicker></mat-datepicker>
-                <mat-error *ngIf="hasError('dueDate')">
-                    {{ getError('dueDate') }}
-                </mat-error>
-            </mat-form-field>
+        <!-- FINANCIALS -->
+        <section class="section">
+            <h3>Financials</h3>
 
-        </div>
+            <div class="grid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Subtotal</mat-label>
+                    <input matInput type="number" formControlName="subtotal">
+                </mat-form-field>
 
-        <h3>Financials</h3>
-        <div class="grid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tax</mat-label>
+                    <input matInput type="number" formControlName="tax">
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Subtotal</mat-label>
-                <input matInput type="number" formControlName="subtotal">
-                <mat-error *ngIf="hasError('subtotal')">
-                    {{ getError('subtotal') }}
-                </mat-error>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Total</mat-label>
+                    <input matInput type="number" formControlName="total">
+                    <mat-error *ngIf="hasError('total')">
+                        {{ getError('total') }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </section>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Tax</mat-label>
-                <input matInput type="number" formControlName="tax">
-                <mat-error *ngIf="hasError('tax')">
-                    {{ getError('tax') }}
-                </mat-error>
-            </mat-form-field>
+        <!-- LINE ITEMS -->
+        <section class="section">
+            <h3>Line Items</h3>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Total</mat-label>
-                <input matInput type="number" formControlName="total">
-                <mat-error *ngIf="hasError('total')">
-                    {{ getError('total') }}
-                </mat-error>
-            </mat-form-field>
+            <div class="table-wrapper">
+                <table *ngIf="extracted().lineItems?.length; else noItems">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
 
-        </div>
+                    <tbody>
+                        <tr *ngFor="let item of extracted().lineItems">
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-        <h3>Line Items</h3>
+                <ng-template #noItems>
+                    <p class="muted">No line items found</p>
+                </ng-template>
+            </div>
+        </section>
 
-        <table *ngIf="extracted().lineItems?.length; else noItems" class="items-table">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of extracted().lineItems">
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.total }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- VALIDATION -->
+        <section class="section">
+            <h3>Validation Issues</h3>
 
-        <ng-template #noItems>
-            <p>No line items found</p>
-        </ng-template>
+            <div *ngIf="validation()?.isValid; else errors">
+                <p class="valid">✔ Document is valid</p>
+            </div>
 
-        <h3>Validation Issues</h3>
+            <ng-template #errors>
+                <ul class="errors">
+                    <li *ngFor="let err of validation()?.errors">
+                        <strong>{{ err.field }}</strong>: {{ err.message }}
+                    </li>
+                </ul>
+            </ng-template>
+        </section>
 
-        <div *ngIf="validation()?.isValid; else errors">
-            <p class="valid">Document is valid</p>
-        </div>
-
-        <ng-template #errors>
-            <ul>
-                <li *ngFor="let err of validation()?.errors">
-                    <strong>{{ err.field }}</strong>: {{ err.message }}
-                </li>
-            </ul>
-        </ng-template>
-
+        <!-- ACTIONS -->
         <div class="actions">
             <button mat-raised-button color="primary" (click)="save()" [disabled]="saving() || !form.dirty">
-                Save
+                Save Changes
             </button>
         </div>
 

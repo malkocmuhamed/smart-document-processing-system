@@ -133,10 +133,9 @@ export class DocumentDetailsComponent {
         this.documentService.update(doc.id, payload)
             .pipe(finalize(() => this.saving.set(false)))
             .subscribe({
-                next: (updatedDoc) => {
+                next: async (updatedDoc) => {
                     this.toastr.success('Document updated successfully');
-
-                    // 🔥 single source of truth update
+                    await this.documentService.refresh();
                     this.document.set(updatedDoc);
                 },
                 error: () => {

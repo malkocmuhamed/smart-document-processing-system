@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { finalize } from 'rxjs';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-upload',
@@ -16,7 +17,8 @@ import { finalize } from 'rxjs';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule
   ],
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.scss'],
@@ -24,6 +26,7 @@ import { finalize } from 'rxjs';
 export class UploadComponent {
   private documentService = inject(DocumentService);
   private toastr = inject(ToastrService);
+  private dialogRef = inject(MatDialogRef<UploadComponent>);
 
   selectedFile = signal<File | null>(null);
   loading = signal(false);
@@ -50,10 +53,11 @@ export class UploadComponent {
     this.documentService.upload(file)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (res) => {
+        next: async (res) => {
           this.toastr.success('Uploaded successfully');
           this.result.set(res.document);
-          this.selectedFile.set(null);
+          await this.documentService.refresh();
+          this.dialogRef.close(true);
         }
       });
   }

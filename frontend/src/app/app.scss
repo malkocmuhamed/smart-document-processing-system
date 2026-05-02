@@ -1,0 +1,14 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.spacer {
+  flex: 1;
+}
