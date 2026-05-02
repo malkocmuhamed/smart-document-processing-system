@@ -33,14 +33,9 @@
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
+            ],         
             "security": {
               "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
             }
           },
           "configurations": {
