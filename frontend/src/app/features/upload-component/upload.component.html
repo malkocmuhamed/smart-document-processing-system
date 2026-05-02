@@ -5,28 +5,15 @@
     Choose File
   </button>
 
-  <input
-    type="file"
-    hidden
-    #fileInput
-    (change)="onFileSelected($event)"
-  />
+  <input type="file" hidden #fileInput (change)="onFileSelected($event)" />
 
-  <p *ngIf="selectedFile">
-    Selected: {{ selectedFile.name }}
+  <p *ngIf="selectedFile() as file">
+    Selected: {{ file.name }}
   </p>
 
-  <button
-    mat-raised-button
-    color="accent"
-    (click)="upload()"
-    [disabled]="loading || !selectedFile"
-  >
+  <button mat-raised-button color="accent" (click)="upload()" [disabled]="loading() || !selectedFile()">
     Upload
   </button>
 
-  <mat-progress-bar
-    *ngIf="loading"
-    mode="indeterminate"
-  ></mat-progress-bar>
+  <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
 </mat-card>

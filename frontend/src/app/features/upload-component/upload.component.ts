@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentService } from '../../core/services/document.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { finalize } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-upload',
@@ -23,46 +22,39 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./upload.component.scss'],
 })
 export class UploadComponent {
-  selectedFile: File | null = null;
-  loading = false;
+  private documentService = inject(DocumentService);
+  private toastr = inject(ToastrService);
 
-  result: any = null;
-
-  constructor(
-    private documentService: DocumentService,
-    private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
-  ) { }
+  selectedFile = signal<File | null>(null);
+  loading = signal(false);
+  result = signal<any | null>(null);
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile = file;
-      this.result = null;
+      this.selectedFile.set(file);
+      this.result.set(null);
     }
   }
 
   upload() {
-    if (!this.selectedFile) {
+    const file = this.selectedFile();
+
+    if (!file) {
       this.toastr.warning('Please select a file');
       return;
     }
 
-    this.loading = true;
-    this.documentService
-      .upload(this.selectedFile)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.cdr.detectChanges(); 
-        })
-      )
+    this.loading.set(true);
+
+    this.documentService.upload(file)
+      .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (res) => {
-          this.toastr.success('File uploaded successfully');
-          this.result = res.document;
-          this.selectedFile = null;
-        },
+          this.toastr.success('Uploaded successfully');
+          this.result.set(res.document);
+          this.selectedFile.set(null);
+        }
       });
   }
 }

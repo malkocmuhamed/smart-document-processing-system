@@ -1,0 +1,34 @@
+.dashboard-card {
+    margin: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Status colors */
+.status.VALIDATED {
+    background-color: green;
+}
+
+.status.NEEDS_REVIEW {
+    background-color: orange;
+}
+
+.status.REJECTED {
+    background-color: red;
+}
+
+.status.UPLOADED {
+    background-color: gray;
+}
