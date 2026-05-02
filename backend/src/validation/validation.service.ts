@@ -4,7 +4,7 @@ import { TotalsRule } from './rules/totals.rule';
 import { LineItemsRule } from './rules/line-items.rule';
 import { DatesRule } from './rules/dates.rule';
 import { DuplicateRule } from './rules/duplicate.rule';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { ValidationResult } from './types/validation-result.type';
 import { ValidationError } from './types/validation-error.type';
 import { ExtractedDocument } from 'src/models/extracted-document.model';

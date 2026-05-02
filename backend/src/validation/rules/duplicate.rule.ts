@@ -1,6 +1,6 @@
 import { ValidationRule } from './validation-rule.interface';
 import { ValidationError } from '../types/validation-error.type';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { ValidationContext } from '../types/validation-context.type';
 
 export class DuplicateRule implements ValidationRule {

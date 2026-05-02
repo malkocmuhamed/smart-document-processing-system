@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { ExtractionService } from '../extraction/extraction.service';
 import { ValidationService } from 'src/validation/validation.service';
 import { DocumentStatus } from '@prisma/client';
