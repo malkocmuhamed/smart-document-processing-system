@@ -6,7 +6,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:4200',
-      'https://smart-document-processing-system-q5n3mvgla.vercel.app'
+      'https://smart-document-processing-system.vercel.app/'
     ],
     credentials: true,
   });
