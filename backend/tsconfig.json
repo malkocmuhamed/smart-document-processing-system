@@ -12,6 +12,10 @@
     "useDefineForClassFields": false,
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   }
 }
