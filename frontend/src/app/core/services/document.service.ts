@@ -16,25 +16,11 @@ export class DocumentService {
     private _error = signal<string | null>(null);
     readonly error = this._error.asReadonly();
 
-    async loadAll() {
-        try {
-            this._loading.set(true);
-            this._error.set(null);
-
-            const data = await firstValueFrom(
-                this.api.get<Document[]>('/documents')
-            );
-
-            this._documents.set(data);
-        } catch (err: any) {
-            this._error.set(err.message || 'Failed to load documents');
-        } finally {
-            this._loading.set(false);
-        }
-    }
+    private _currencyTotals = signal<Record<string, number>>({});
+    readonly currencyTotals = this._currencyTotals.asReadonly();
 
     async refresh() {
-        await this.loadAll();
+        await this.loadDashboard();
     }
 
     upload(file: File) {
@@ -52,7 +38,21 @@ export class DocumentService {
         return this.api.patch<Document>(`/documents/${id}`, data);
     }
 
-    dashboard() {
-        return this.api.get('/documents/dashboard');
+    loadDashboard() {
+        this._loading.set(true);
+        this._error.set(null);
+
+        this.api.get<any>('/documents/dashboard')
+            .subscribe({
+                next: (res) => {
+                    this._documents.set(res.documents || []);
+                    this._currencyTotals.set(res.totalsByCurrency || {});
+                    this._loading.set(false);
+                },
+                error: (err) => {
+                    this._error.set(err.message || 'Dashboard load failed');
+                    this._loading.set(false);
+                }
+            });
     }
 }

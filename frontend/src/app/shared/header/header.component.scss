@@ -12,8 +12,20 @@
   cursor: pointer;
 }
 
-.header-buttons{
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+.header-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-icon {
+  height: 24px;
+  width: 24px;
+  margin-right: 8px;
 }

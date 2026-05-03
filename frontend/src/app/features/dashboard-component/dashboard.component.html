@@ -1,53 +1,90 @@
-<mat-card class="dashboard-card">
+<ng-container *ngIf="!loading(); else loadingTpl">
 
-    <div class="header">
-        <h2>Documents</h2>
+    <ng-container *ngIf="documents().length; else emptyTpl">
+
+        <mat-card class="dashboard-card">
+            <div class="documents-currency-container">
+
+                <div class="currency-summary" *ngIf="currencyTotals() | keyvalue as totals">
+                    <h3>Documents - Totals by Currency</h3>
+                    <div class="currency-grid">
+                        <div class="currency-card" *ngFor="let item of totals">
+                            <div class="currency-code">{{ item.key }}</div>
+                            <div class="currency-value">{{ item.value | number:'1.2-2' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header">
+                    <button mat-raised-button color="accent" (click)="openUpload()">
+                        Upload document
+                    </button>
+                </div>
+            </div>
+
+            <table mat-table [dataSource]="documents()" class="table">
+                <!-- columns unchanged -->
+                <ng-container matColumnDef="fileName">
+                    <th mat-header-cell *matHeaderCellDef>File</th>
+                    <td mat-cell *matCellDef="let doc">{{ doc.fileName }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let doc">
+                        <span class="status" [ngClass]="doc.status">
+                            {{ doc.status }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                    <th mat-header-cell *matHeaderCellDef>Created</th>
+                    <td mat-cell *matCellDef="let doc">
+                        {{ doc.createdAt | date:'short' }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="errors">
+                    <th mat-header-cell *matHeaderCellDef>Issues</th>
+                    <td mat-cell *matCellDef="let doc">
+                        {{ errorCount(doc) }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let doc">
+                        <button mat-button color="primary" (click)="viewDocument(doc.id)">
+                            View
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+        </mat-card>
+
+    </ng-container>
+
+</ng-container>
+
+<ng-template #loadingTpl>
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
     </div>
+</ng-template>
 
-    <table mat-table [dataSource]="documents()" class="table">
+<ng-template #emptyTpl>
+    <mat-card class="empty-card">
+        <div class="empty-container">
+            <p class="empty-text">There is no data available.</p>
 
-        <ng-container matColumnDef="fileName">
-            <th mat-header-cell *matHeaderCellDef>File</th>
-            <td mat-cell *matCellDef="let doc">{{ doc.fileName }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let doc">
-                <span class="status" [ngClass]="doc.status">
-                    {{ doc.status }}
-                </span>
-            </td>
-        </ng-container>
-
-        <!-- Date -->
-        <ng-container matColumnDef="createdAt">
-            <th mat-header-cell *matHeaderCellDef>Created</th>
-            <td mat-cell *matCellDef="let doc">
-                {{ doc.createdAt | date:'short' }}
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="errors">
-            <th mat-header-cell *matHeaderCellDef>Issues</th>
-            <td mat-cell *matCellDef="let doc">
-                {{ errorCount(doc) }}
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-
-            <td mat-cell *matCellDef="let doc">
-                <button mat-button color="primary" (click)="viewDocument(doc.id)">
-                    View
-                </button>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-    </table>
-
-</mat-card>
+            <button mat-raised-button color="primary" (click)="openUpload()">
+                Upload your first document
+            </button>
+        </div>
+    </mat-card>
+</ng-template>
