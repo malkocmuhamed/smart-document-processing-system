@@ -73,9 +73,11 @@ export class DocumentsService {
     }
 
     async dashboard() {
-        const docs = await this.prisma.document.findMany();
+        const docs = await this.prisma.document.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
         const totalsByCurrency: Record<string, number> = {};
-        
+
         for (const doc of docs) {
             const data: any = doc.extractedData;
 
