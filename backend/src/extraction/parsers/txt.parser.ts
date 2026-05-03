@@ -4,9 +4,13 @@ import { ExtractedDocument } from 'src/models/extracted-document.model';
 
 @Injectable()
 export class TxtParser {
+
   parse(file: Express.Multer.File): ExtractedDocument {
     const content = fs.readFileSync(file.path, 'utf-8');
+    return this.parseText(content);
+  }
 
+  parseText(content: string): ExtractedDocument {
     const lines = content
       .split('\n')
       .map(l => l.trim())
@@ -19,7 +23,6 @@ export class TxtParser {
     for (const line of lines) {
       const lower = line.toLowerCase();
 
-      // 🧠 Document number detection (multiple patterns)
       if (!documentNumber) {
         if (lower.includes('invoice')) {
           documentNumber = line.replace(/invoice/i, '').trim();
@@ -36,14 +39,10 @@ export class TxtParser {
         lower.includes('due')
       ) {
         const numberMatch = line.match(/(\d+(\.\d+)?)/);
-        if (numberMatch) {
-          total = Number(numberMatch[0]);
-        }
+        if (numberMatch) total = Number(numberMatch[0]);
 
         const currencyMatch = line.match(/\b(EUR|USD|GBP)\b/i);
-        if (currencyMatch) {
-          currency = currencyMatch[0].toUpperCase();
-        }
+        if (currencyMatch) currency = currencyMatch[0].toUpperCase();
       }
     }
 

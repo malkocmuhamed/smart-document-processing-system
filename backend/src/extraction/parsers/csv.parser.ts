@@ -48,8 +48,8 @@ export class CsvParser {
                 description: desc,
                 quantity: qty,
                 price,
-                total: totalFromFile,         
-                calculatedTotal,              
+                total: totalFromFile,
+                calculatedTotal,
             });
         }
 

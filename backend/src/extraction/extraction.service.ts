@@ -1,33 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { TxtParser } from './parsers/txt.parser';
 import { CsvParser } from './parsers/csv.parser';
-import { PdfParser } from './parsers/pdf.parser';
-import { ImageParser } from './parsers/image.parser';
+import PdfParse from 'pdf-parse-new';
 
 @Injectable()
 export class ExtractionService {
   constructor(
     private txtParser: TxtParser,
     private csvParser: CsvParser,
-    private pdfParser: PdfParser,
-    private imageParser: ImageParser,
   ) { }
 
   async extract(file: Express.Multer.File) {
     const type = this.detectType(file);
 
     switch (type) {
-      case 'txt':
-        return this.txtParser.parse(file);
-
       case 'csv':
         return this.csvParser.parse(file);
 
-      case 'pdf':
-        return this.pdfParser.parse(file);
+      case 'txt':
+        return this.txtParser.parse(file);
 
-      case 'image':
-        return this.imageParser.parse(file);
+      case 'pdf': {
+        try {
+          const pdfText = await PdfParse(file.buffer);
+          return this.txtParser.parseText(pdfText.text);
+        } catch {
+          return this.txtParser.parseText('');
+        }
+      }
+
+      case 'image': {
+        return this.txtParser.parseText('');
+      }
     }
   }
 
