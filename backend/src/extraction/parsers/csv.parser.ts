@@ -42,15 +42,14 @@ export class CsvParser {
 
             const calculatedTotal = qty * price;
 
-            subtotal += calculatedTotal;
+            subtotal += totalFromFile;
 
             lineItems.push({
                 description: desc,
                 quantity: qty,
                 price,
-                total: calculatedTotal,
-                originalTotal: totalFromFile, 
-                isValid: calculatedTotal === totalFromFile,
+                total: totalFromFile,         
+                calculatedTotal,              
             });
         }
 

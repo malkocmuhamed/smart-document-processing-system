@@ -20,10 +20,10 @@ export class LineItemsRule implements ValidationRule {
             ) {
                 const expected = item.quantity * item.price;
 
-                if (expected !== item.total) {
+                if (item.price * item.quantity !== item.total) {
                     errors.push({
                         field: 'lineItems',
-                        message: `Line item incorrect (expected ${expected}, got ${item.total})`,
+                        message: `Line total mismatch: expected ${item.price * item.quantity}, got ${item.total}`
                     });
                 }
             }

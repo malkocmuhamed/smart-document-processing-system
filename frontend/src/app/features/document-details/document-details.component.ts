@@ -124,6 +124,7 @@ export class DocumentDetailsComponent {
 
         const payload = {
             ...formValue,
+            lineItems: this.document()?.extractedData?.lineItems ?? [],
             issueDate: this.formatDate(formValue.issueDate),
             dueDate: this.formatDate(formValue.dueDate),
         };
