@@ -1,11 +1,18 @@
 .document-card {
   padding: 24px;
+  background-color: #d2eef7;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.titles {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .title {
@@ -41,7 +48,6 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .section {

@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
 import { DocumentService } from '../../core/services/document.service';
@@ -49,11 +49,25 @@ export class DocumentDetailsComponent {
         documentNumber: [''],
         currency: [''],
         issueDate: [null as Date | null],
+        lineItems: this.fb.array([]),
         dueDate: [null as Date | null],
         subtotal: [''],
         tax: [''],
         total: [''],
     });
+
+    get lineItemsArray() {
+        return this.form.get('lineItems') as FormArray;
+    }
+
+    createLineItem(item: any): FormGroup {
+        return this.fb.group({
+            description: [item?.description ?? ''],
+            quantity: [item?.quantity ?? 0],
+            price: [item?.price ?? 0],
+            total: [item?.total ?? 0],
+        });
+    }
 
     readonly extracted = computed(() =>
         this.document()?.extractedData ?? {}
@@ -75,24 +89,28 @@ export class DocumentDetailsComponent {
             const doc = this.document();
             if (!doc) return;
 
-            this.form.reset(
-                {
-                    documentType: doc.extractedData?.documentType ?? '',
-                    supplier: doc.extractedData?.supplier ?? '',
-                    documentNumber: doc.extractedData?.documentNumber ?? '',
-                    currency: doc.extractedData?.currency ?? '',
-                    issueDate: doc.extractedData?.issueDate
-                        ? new Date(doc.extractedData.issueDate)
-                        : null,
-                    dueDate: doc.extractedData?.dueDate
-                        ? new Date(doc.extractedData.dueDate)
-                        : null,
-                    subtotal: doc.extractedData?.subtotal ?? '',
-                    tax: doc.extractedData?.tax ?? '',
-                    total: doc.extractedData?.total ?? '',
-                },
-                { emitEvent: false }
-            );
+            this.form.patchValue({
+                documentType: doc.extractedData?.documentType ?? '',
+                supplier: doc.extractedData?.supplier ?? '',
+                documentNumber: doc.extractedData?.documentNumber ?? '',
+                currency: doc.extractedData?.currency ?? '',
+                issueDate: doc.extractedData?.issueDate
+                    ? new Date(doc.extractedData.issueDate)
+                    : null,
+                dueDate: doc.extractedData?.dueDate
+                    ? new Date(doc.extractedData.dueDate)
+                    : null,
+                subtotal: doc.extractedData?.subtotal ?? '',
+                tax: doc.extractedData?.tax ?? '',
+                total: doc.extractedData?.total ?? '',
+            }, { emitEvent: false });
+
+            this.lineItemsArray.clear();
+
+            const items = doc.extractedData?.lineItems ?? [];
+            items.forEach((item: any) => {
+                this.lineItemsArray.push(this.createLineItem(item));
+            });
         });
     }
 
@@ -124,7 +142,7 @@ export class DocumentDetailsComponent {
 
         const payload = {
             ...formValue,
-            lineItems: this.document()?.extractedData?.lineItems ?? [],
+            lineItems: formValue.lineItems,
             issueDate: this.formatDate(formValue.issueDate),
             dueDate: this.formatDate(formValue.dueDate),
         };
